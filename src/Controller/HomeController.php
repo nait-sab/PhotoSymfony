@@ -17,4 +17,19 @@ class HomeController extends AbstractController
             'username' => '',
         ]);
     }
+
+    public function chercherPhotos(): Response
+    {
+        $repo = scandir(__DIR__ . "/../../public/uploads");
+
+        return $this->render("home/voirImages.html.twig", ["liste" => $repo]);
+    }
+
+    /**
+     * @Route("/image/{nom}", name="afficher_image")
+     */
+    public function affiche(string $nom): Response
+    {
+        return $this->file(__DIR__ . "/../../public/uploads/${nom}");
+    }
 }

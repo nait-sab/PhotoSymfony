@@ -10,9 +10,11 @@
     <p>Ceci est votre page d'accueil.</p>
 
 
-    {% if not app.user %}
+    {% if not app.user %} <!-- Partie visible hors connexion -->
         <p>Connecter vous ou inscrivez vous pour recevoir du contenu ici.</p>
-    {% else %}
+    {% else %} <!-- Partie visible pendant connexion -->
         <p>Vous pourrez bientôt avoir des informations ici.</p>
+
+        {{ render(controller("App\\Controller\\HomeController::chercherPhotos")) }}
     {% endif %}
 {% endblock %}

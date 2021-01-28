@@ -17,4 +17,5 @@
 .env
 .env.test
 .idea
+public/uploads
 ###< symfony/phpunit-bridge ###
