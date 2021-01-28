@@ -1,5 +1,6 @@
 {% for element in liste %}
     {% if element != '.' and element != '..' %}
-        <img src="{{ path('afficher_image', {nom: element}) }}" style="float: left; width: 33%; max-height: 250px" />
+        <img src="{{ path('afficher_image', {nom: element}) }}"
+             style="float: left; width: 30%; padding: 2px; margin: 2px;" />
     {% endif %}
 {% endfor %}
