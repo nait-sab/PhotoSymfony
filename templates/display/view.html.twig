@@ -28,11 +28,15 @@
             margin: 4px 2px;
             cursor: pointer;
         }
+
+        #btnDelete:hover {
+            background-color: #ffa470;
+        }
     </style>
 
     <img src="{{ path('afficher_image', {nom: nom}) }}" />
     <div id="contenu">
         <h1>Auteur : {{ auteur }}</h1>
-        <button id="btnDelete">Supprimer</button>
+        <a href="{{ path('delete_image', {id: id}) }}" id="btnDelete">Supprimer</a>
     </div>
 {% endblock %}
