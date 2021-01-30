@@ -42,7 +42,16 @@ class HomeController extends AbstractController
             $slot++;
         }
 
-        // 5 - Extraire uniquement les images apartenant au client
+        // 5 - Récupérer la liste des id
+        $listeID = [];
+        $slot = 0;
+        foreach ($repoClient as $image)
+        {
+            $listeID[$slot] = $image->getId();
+            $slot++;
+        }
+
+        // 6 - Extraire uniquement les images apartenant au client
         $listeVisible = [];
         $slot = 0;
         foreach ($repo as $image)
@@ -54,7 +63,7 @@ class HomeController extends AbstractController
             }
         }
 
-        return $this->render("home/voirImages.html.twig", ["liste" => $listeVisible]);
+        return $this->render("home/voirImages.html.twig", ["liste" => $listeVisible, "ID" => $listeID]);
     }
 
     /**

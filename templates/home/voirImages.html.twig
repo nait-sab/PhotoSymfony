@@ -1,6 +1,12 @@
+{% set slot = 0 %}
 {% for element in liste %}
     {% if element != '.' and element != '..' %}
-        <img src="{{ path('afficher_image', {nom: element}) }}"
-             style="float: left; width: 30%; padding: 2px; margin: 2px;" />
+        <a href="{{ path('display_image', {id: ID[slot]}) }}">
+            <img
+                 src="{{ path('afficher_image', {nom: element}) }}"
+                 style="float: left; width: 30%; padding: 2px; margin: 2px;"
+            />
+        </a>
     {% endif %}
+    {% set slot = slot + 1 %}
 {% endfor %}
