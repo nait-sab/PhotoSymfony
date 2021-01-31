@@ -16,7 +16,7 @@ class DisplayController extends AbstractController
     /**
      * @Route("/display/{id}", name="display_image")
      */
-    public function index(int $id, UploadRepository $images, UserRepository $users): Response
+    public function showImage(int $id, UploadRepository $images, UserRepository $users): Response
     {
         $image = $images->findOneBy(['id' => $id]);
 
@@ -50,7 +50,8 @@ class DisplayController extends AbstractController
                     "nom" => $nom,
                     "auteur" => $auteur,
                     "id" => $id,
-                    "showDelete" => $proprietaire
+                    "proprietaire" => $proprietaire,
+                    "public" => $image->getPublic()
                 ]);
             else
                 return $this->render('display/private.html.twig');
@@ -62,18 +63,38 @@ class DisplayController extends AbstractController
      */
     public function removeImage(int $id, UploadRepository $images, EntityManagerInterface $manager)
     {
-        // Récupérer l'entité
+        // Récupérer l'image
         $image = $images->findOneBy(['id' => $id]);
 
         // Retirer l'entité du dossier du site
         $nom = $image->getName();
         unlink(__DIR__ . "/../../public/uploads/" . $nom);
 
-        // Retirer l'entité du database
+        // Retirer l'image du database
         $manager->remove($image);
         $manager->flush();
 
         // Ramener le client au menu
         return $this->render('home/index.html.twig');
+    }
+
+    /**
+     * @Route("/display/visibility/{id}", name="visibility_image")
+     */
+    public function switchVisibilityImage(int $id, UploadRepository $images, EntityManagerInterface $manager)
+    {
+        // Récupérer l'image
+        $image = $images->findOneBy(['id' => $id]);
+        $public = $image->getPublic();
+
+        if ($public)
+            $image->setPublic(false);
+        else
+            $image->setPublic(true);
+
+        // mettre à jour l'image du database
+        $manager->flush();
+
+        return $this->redirectToRoute('display_image', ['id' => $id]);
     }
 }

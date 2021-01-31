@@ -16,7 +16,7 @@
             margin-top: 5%;
         }
 
-        #btnDelete {
+        .btn {
             background-color: #ff6e20;
             border: none;
             color: white;
@@ -29,16 +29,32 @@
             cursor: pointer;
         }
 
-        #btnDelete:hover {
-            background-color: #ffa470;
+        .btn:hover {
+            background-color: #c14908;
+        }
+
+        #zonePublique {
+            margin-top: 10px;
         }
     </style>
 
     <img src="{{ path('afficher_image', {nom: nom}) }}" />
     <div id="contenu">
         <h1>Auteur : {{ auteur }}</h1>
-        {% if showDelete %}
-        <a href="{{ path('delete_image', {id: id}) }}" id="btnDelete">Supprimer</a>
+
+        {% if proprietaire %}
+            <div id="zonePublique">
+                <h2>Visibilité : <a class="btn" href="{{ path('visibility_image', {id: id}) }}">
+
+                {% if public %}
+                        Cliquer pour rendre privée
+                {% else %}
+                        Cliquer pour rendre publique
+                {% endif %}
+
+                </a><a href="{{ path('delete_image', {id: id}) }}" class="btn">Supprimer</a></h2>
+            </div>
         {% endif %}
+
     </div>
 {% endblock %}
