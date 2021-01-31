@@ -37,6 +37,8 @@
     <img src="{{ path('afficher_image', {nom: nom}) }}" />
     <div id="contenu">
         <h1>Auteur : {{ auteur }}</h1>
+        {% if showDelete %}
         <a href="{{ path('delete_image', {id: id}) }}" id="btnDelete">Supprimer</a>
+        {% endif %}
     </div>
 {% endblock %}

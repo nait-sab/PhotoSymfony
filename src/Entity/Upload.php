@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Upload
 {
+    // Variables
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -27,32 +29,33 @@ class Upload
      */
     private $proprietaire;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $public;
 
-    public function getName()
-    {
-        return $this->name;
-    }
+    // Accesseurs
+    public function getId(): ?int { return $this->id; }
+    public function getName() { return $this->name; }
+    public function getProprietaire() { return $this->proprietaire; }
+    public function getPublic() { return $this->public; }
 
+    // Modifieurs
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
-    }
-
-    public function getProprietaire()
-    {
-        return $this->proprietaire;
     }
 
     public function setProprietaire($name)
     {
         $this->proprietaire = $name;
+        return $this;
+    }
 
+    public function setPublic($etat)
+    {
+        $this->public = $etat;
         return $this;
     }
 }

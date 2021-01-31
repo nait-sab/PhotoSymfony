@@ -37,6 +37,7 @@ class ImportationController extends AbstractController
             // 4 - Création du fichier sur le SQL
             $upload->setName($fichierNom);
             $upload->setProprietaire($user);
+            $upload->setPublic(false);
             $manager->persist($upload);
             $manager->flush();
 

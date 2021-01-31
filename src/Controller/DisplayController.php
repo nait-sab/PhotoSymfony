@@ -26,9 +26,22 @@ class DisplayController extends AbstractController
         {
             $nom = $image->getName();
             $proprietaireID = $image->getProprietaire();
-            $user = $users->findOneBy(['id' => $proprietaireID])->getUsername();
+            $auteur = $users->findOneBy(['id' => $proprietaireID])->getUsername();
 
-            return $this->render('display/view.html.twig', ["nom" => $nom, "auteur" => $user, "id" => $id]);
+            $userName = $this->getUser()->getUsername();
+            $userPassword = $this->getUser()->getPassword();
+            $clientID = $users->findOneBy(['username' => $userName, 'password' => $userPassword])->getId();
+
+            $proprietaire = false;
+            if ($proprietaireID == $clientID)
+                $proprietaire = true;
+
+            return $this->render('display/view.html.twig', [
+                "nom" => $nom,
+                "auteur" => $auteur,
+                "id" => $id,
+                "showDelete" => $proprietaire
+            ]);
         }
     }
 
