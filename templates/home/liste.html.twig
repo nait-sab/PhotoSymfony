@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    <h1>Liste des utilisateurs :</h1>
+
+    {% if liste is defined and liste|length > 0 %}
+        {% for client in liste %}
+            <div class="zonePublique">
+                <a class="profilLink" href="{{ path('voir_profil', {id: client.id}) }}">{{ client.username }}</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{%  endblock %}

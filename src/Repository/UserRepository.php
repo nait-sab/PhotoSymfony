@@ -19,6 +19,16 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function findUsersWithoutConnect(User $user)
+    {
+        $qb = $this->createQueryBuilder('u')
+                   ->where('u.id <> :user')
+                   ->setParameter('user', $user->getId())
+                   ->getQuery();
+
+        return $qb->getResult();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

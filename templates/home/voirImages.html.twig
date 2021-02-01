@@ -2,10 +2,7 @@
 {% for element in liste %}
     {% if element != '.' and element != '..' %}
         <a href="{{ path('display_image', {id: ID[slot]}) }}">
-            <img
-                 src="{{ path('afficher_image', {nom: element}) }}"
-                 style="float: left; width: 30%; padding: 2px; margin: 2px;"
-            />
+            <img class="grilleImage" src="{{ path('afficher_image', {nom: element}) }}"/>
         </a>
     {% endif %}
     {% set slot = slot + 1 %}

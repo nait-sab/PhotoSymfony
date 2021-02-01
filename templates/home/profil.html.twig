@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Image{% endblock %}
+
+{% block body %}
+    <h1>{{ client.username }}</h1>
+    {{ render(path('voir_profil_photos', {id: client.id})) }}
+{% endblock %}
