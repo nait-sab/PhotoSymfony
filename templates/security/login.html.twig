@@ -11,6 +11,7 @@
         <div class="form-group">
             <input placeholder="Mot de passe..." required name="_password" type="password" class="form-control">
         </div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" >
         <div class="form-group">
             <button type="submit" class="btn btn-success">Connexion</button>
         </div>

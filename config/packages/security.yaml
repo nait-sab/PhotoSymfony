@@ -18,14 +18,14 @@ security:
             security: false
         main:
             anonymous: true
-            lazy: true
             provider: in_database
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
             form_login:
                 login_path: security_login
                 check_path: security_login
-            logout:
-                path: security_logout
-                target: home
+                default_target_path: security_login
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -37,3 +37,4 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+

@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SecurityController extends AbstractController
 {
@@ -51,7 +52,18 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/deconnexion", name="security_logout")
+     * @Route("/deconnexion", name="_logout")
+     * @param Request $requete
+     * @param TokenStorageInterface $token
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function logout() {}
+    public function customLogout(Request $request, TokenStorageInterface $token)
+    {
+        $session = $request->getSession();
+        $session->invalidate();
+        $session->clear();
+        $token->setToken(null);
+
+        return $this->redirectToRoute('home');
+    }
 }

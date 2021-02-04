@@ -1,9 +1,10 @@
 img {
     width: 100%;
-    height: 100%;
-    position: relative;
     margin: 0;
-    top: 30%;
+}
+
+.radiant {
+    border-radius: 10px;
 }
 
 #contenu {
@@ -28,11 +29,10 @@ img {
 }
 
 .zonePublique {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .grilleImage {
-    float: left;
     width: 30%;
     padding: 2px;
     margin: 2px;

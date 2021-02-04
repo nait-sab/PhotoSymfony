@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\UploadRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,51 +38,16 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig');
     }
 
-    public function chercherPhotos(UserRepository $clients, UploadRepository $images): Response
+    public function chercherPhotos(UserRepository $clients, UploadRepository $imageRepository, TokenStorageInterface $tokenStorage): Response
     {
-        // 1 - Récupérer l'id du propriétaire de l'image
-        $clientID = $clients->findOneBy([
-            'username' => $this->getUser()->getUsername(),
-            'password' => $this->getUser()->getPassword()
-        ])->getId();
+        $images = null;
+        if ( null !== $tokenStorage->getToken() ) {
+            $user = $tokenStorage->getToken()->getUser();
 
-        // 2 - Récupérer le dossier des images
-        $repo = scandir(__DIR__ . "/../../public/uploads");
-
-        // 3 - Récupérer la liste des images du client
-        $repoClient = $images->findBy(['proprietaire' => $clientID]);
-
-        // 4 - Récupérer la liste des noms
-        $listeImages = [];
-        $slot = 0;
-        foreach ($repoClient as $image)
-        {
-            $listeImages[$slot] = $image->getName();
-            $slot++;
+            $images = $imageRepository->findBy([ "proprietaire" => $user->getId()]);
         }
 
-        // 5 - Récupérer la liste des id
-        $listeID = [];
-        $slot = 0;
-        foreach ($repoClient as $image)
-        {
-            $listeID[$slot] = $image->getId();
-            $slot++;
-        }
-
-        // 6 - Extraire uniquement les images apartenant au client
-        $listeVisible = [];
-        $slot = 0;
-        foreach ($repo as $image)
-        {
-            if (in_array($image, $listeImages))
-            {
-                $listeVisible[$slot] = $image;
-                $slot++;
-            }
-        }
-
-        return $this->render("home/voirImages.html.twig", ["liste" => $listeVisible, "ID" => $listeID]);
+        return $this->render("home/voirImages.html.twig", ["images" => $images]);
     }
 
     /**
@@ -113,54 +79,30 @@ class HomeController extends AbstractController
      */
     public function showProfil(int $id, UserRepository $clients): Response
     {
-        $client = $clients->findOneBy(['id' => $id]);
+        $client = $clients->find($id);
+
+        if (null === $client) {
+            throw new EntityNotFoundException('Utilisateur non trouvé !');
+        }
+
         return $this->render("home/profil.html.twig", ["client" => $client]);
     }
 
     /**
      * @Route("/profil/photos/{id}", name="voir_profil_photos")
      */
-    public function photosUtilisateur(int $id, UploadRepository $imageRepository): Response
+    public function photosUtilisateur(UploadRepository $imageRepository, UserRepository $userRepository, int $id): Response
     {
-        // 1 - Récupérer les images public
-        $reposiroty = $imageRepository->findBy(['proprietaire' => $id, 'public' => true]);
+        $user = $userRepository->find($id);
 
-        // 2 - Récupérer le dossier des images
-        $uploadsDirectory = scandir(__DIR__ . "/../../public/uploads");
-
-        // 3 - Récupérer la liste des noms
-        $repositoryNoms = [];
-        $slot = 0;
-        foreach ($reposiroty as $image)
-        {
-            $repositoryNoms[$slot] = $image->getName();
-            $slot++;
+        if (null === $user) {
+            throw new EntityNotFoundException('Utilisateur non trouvé !');
         }
 
-        // 4 - Récupérer la liste des id
-        $repositoryIDs = [];
-        $slot = 0;
-        foreach ($reposiroty as $image)
-        {
-            $repositoryIDs[$slot] = $image->getId();
-            $slot++;
-        }
-
-        // 5 - Extraire uniquement les images nécéssaires
-        $listeAfficher = [];
-        $slot = 0;
-        foreach ($uploadsDirectory as $nomImage)
-        {
-            if (in_array($nomImage, $repositoryNoms))
-            {
-                $listeAfficher[$slot] = $nomImage;
-                $slot++;
-            }
-        }
+        $images = $imageRepository->findBy([ "proprietaire" => $user->getId(), "public" => true]);
 
         return $this->render("home/voirImages.html.twig", [
-            "liste" => $listeAfficher,
-            "ID" => $repositoryIDs
+            "images" => $images
         ]);
     }
 }
